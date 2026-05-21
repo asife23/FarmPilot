@@ -1,10 +1,10 @@
 {
-  "projectId": "symbolic-seeker-84jp1",
-  "appId": "1:650925107890:web:d7599764efea87680637ab",
-  "apiKey": "AIzaSyC-PgL1KU3gN4ioKSsFTUP849YYazGM0_k",
-  "authDomain": "symbolic-seeker-84jp1.firebaseapp.com",
+  "projectId": "gen-lang-client-0212282589",
+  "appId": "1:81407205687:web:f4da1ac21fdb1c8f817ab2",
+  "apiKey": "AIzaSyBHdwbU3BbtYW0QEytix6RxG8BM9Q9H4Nk",
+  "authDomain": "gen-lang-client-0212282589.firebaseapp.com",
   "firestoreDatabaseId": "ai-studio-e3ddad11-f670-467d-a093-60e1ba0d9b5d",
-  "storageBucket": "symbolic-seeker-84jp1.firebasestorage.app",
-  "messagingSenderId": "650925107890",
+  "storageBucket": "gen-lang-client-0212282589.firebasestorage.app",
+  "messagingSenderId": "81407205687",
   "measurementId": ""
 }
