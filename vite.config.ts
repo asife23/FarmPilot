@@ -12,6 +12,41 @@ export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [
+      {
+        name: 'mock-ws',
+        configureServer(server) {
+          if (!server.ws) {
+            server.ws = {
+              send() {},
+              close() {},
+              on() {},
+              off() {},
+              listen() {},
+            } as any;
+          }
+          if (!server.hot) {
+            server.hot = {
+              send() {},
+              close() {},
+              on() {},
+              off() {},
+              listen() {},
+              accept() {},
+              dispose() {},
+              prune() {},
+              decline() {},
+              invalidate() {},
+            } as any;
+          }
+          // Safely intercept and guard existing objects 'send' functions if they are defined
+          if (server.ws && typeof server.ws.send !== 'function') {
+            server.ws.send = () => {};
+          }
+          if (server.hot && typeof server.hot.send !== 'function') {
+            server.hot.send = () => {};
+          }
+        }
+      },
       react(), 
       tailwindcss(),
       VitePWA({

@@ -1,8 +1,15 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocs, getDocsFromCache, Query, DocumentData, QuerySnapshot } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocs, getDocsFromCache, Query, DocumentData, QuerySnapshot, setLogLevel } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
+
+// Suppress verbose SDK warnings like transport errors in the sandbox iframe environment
+try {
+  setLogLevel('error');
+} catch (e) {
+  console.warn("Could not set log level:", e);
+}
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
@@ -15,8 +22,15 @@ try {
     experimentalForceLongPolling: true
   }, firebaseConfig.firestoreDatabaseId);
 } catch (error) {
-  console.warn("Firestore persistent cache initialization failed, falling back to basic Firestore instance:", error);
-  dbInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  console.warn("Firestore persistent cache initialization failed, trying with long polling but in-memory cache:", error);
+  try {
+    dbInstance = initializeFirestore(app, {
+      experimentalForceLongPolling: true
+    }, firebaseConfig.firestoreDatabaseId);
+  } catch (fallbackError) {
+    console.error("Firestore initialization fallback failed:", fallbackError);
+    dbInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+  }
 }
 
 export const db = dbInstance;
