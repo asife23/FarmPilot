@@ -34,7 +34,12 @@ jobs:
           cache: 'npm'
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
+
+      - name: Fix Line Endings and Permissions
+        run: |
+          sed -i 's/\r$//' android/gradlew
+          chmod +x android/gradlew
 
       - name: Patch Capacitor Android AGP Version
         run: |
@@ -45,9 +50,6 @@ jobs:
 
       - name: Sync Web Assets to Android Project
         run: npx cap sync
-
-      - name: Grant Execute Permission to Gradle Wrapper
-        run: chmod +x android/gradlew
 
       - name: Build Debug APK
         run: |

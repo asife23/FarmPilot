@@ -11,11 +11,12 @@ export const auth = getAuth(app);
 let dbInstance;
 try {
   dbInstance = initializeFirestore(app, {
-    localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+    localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()}),
+    experimentalForceLongPolling: true
   }, firebaseConfig.firestoreDatabaseId);
 } catch (error) {
   console.warn("Firestore persistent cache initialization failed, falling back to basic Firestore instance:", error);
-  dbInstance = getFirestore(app);
+  dbInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 }
 
 export const db = dbInstance;
