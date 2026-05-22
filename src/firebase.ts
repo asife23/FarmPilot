@@ -1,14 +1,24 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocs, getDocsFromCache, Query, DocumentData, QuerySnapshot } from 'firebase/firestore';
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, getDocs, getDocsFromCache, Query, DocumentData, QuerySnapshot } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = initializeFirestore(app, {
-  localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
-}, firebaseConfig.firestoreDatabaseId);
+
+// Bulletproof database initialization that handles sandboxed iframe environments where IndexedDB might be disabled
+let dbInstance;
+try {
+  dbInstance = initializeFirestore(app, {
+    localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
+  }, firebaseConfig.firestoreDatabaseId);
+} catch (error) {
+  console.warn("Firestore persistent cache initialization failed, falling back to basic Firestore instance:", error);
+  dbInstance = getFirestore(app);
+}
+
+export const db = dbInstance;
 export const storage = getStorage(app);
 
 export enum OperationType {

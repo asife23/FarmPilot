@@ -4,7 +4,7 @@ import { auth, db } from '../firebase';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Activity, Mail, Lock, UserPlus } from 'lucide-react';
+import { Activity, Mail, Lock, UserPlus, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function Login() {
@@ -61,6 +61,32 @@ export default function Login() {
         toast.error('লগইন ব্যর্থ হয়েছে: ' + error.message);
       }
       console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    const demoEmail = 'demo@khamar.com';
+    const demoPassword = 'demoUser123';
+    try {
+      await signInWithEmailAndPassword(auth, demoEmail, demoPassword);
+      toast.success('ডেমো অ্যাকাউন্টে সফলভাবে লগইন হয়েছে!');
+      navigate('/', { replace: true });
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          const result = await createUserWithEmailAndPassword(auth, demoEmail, demoPassword);
+          await bootstrapUser(result.user.uid, 'ডেমো খামারি', null);
+          toast.success('ডেমো অ্যাকাউন্ট সক্রিয় এবং লগইন হয়েছে!');
+          navigate('/', { replace: true });
+        } catch (signUpError: any) {
+          toast.error('ডেমো লগইন ব্যর্থ হয়েছে: ' + signUpError.message);
+        }
+      } else {
+        toast.error('ডেমো লগইন ব্যর্থ হয়েছে: ' + error.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -146,6 +172,22 @@ export default function Login() {
                 >
                   <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
                   {loading ? 'অপেক্ষা করুন...' : 'গুগল দিয়ে লগইন করুন'}
+                </button>
+
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-gray-200"></div>
+                  <span className="flex-shrink-0 mx-4 text-gray-400 text-xs">অথবা ওয়ান-ক্লিক টেস্ট করুন</span>
+                  <div className="flex-grow border-t border-gray-200"></div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleDemoLogin}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3 bg-green-50 border-2 border-green-600 text-green-700 font-semibold py-3 px-4 rounded-xl hover:bg-green-100 transition-all cursor-pointer"
+                >
+                  <Sparkles size={20} className="text-green-600 animate-pulse" />
+                  ইনস্ট্যান্ট টেস্ট করুন (ডেমো অ্যাকাউন্ট)
                 </button>
               </div>
             </>
