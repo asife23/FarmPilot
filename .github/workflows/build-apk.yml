@@ -36,6 +36,10 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
+      - name: Patch Capacitor Android AGP Version
+        run: |
+          sed -i 's/8.13.0/8.7.2/g' node_modules/@capacitor/android/capacitor/build.gradle
+
       - name: Build Production Web App
         run: npm run build
 
