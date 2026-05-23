@@ -14,15 +14,17 @@ try {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-// Bulletproof database initialization that handles sandboxed iframe environments where IndexedDB might be disabled
+// Bulletproof database initialization that handles sandboxed iframe environments where IndexedDB might be disabled.
+// We DO NOT force experimentalForceLongPolling by default, because HTTP chunked long polling responses can be buffered 
+// by reverse proxies (like Nginx) leading to a 10-second connection timeout. Instead, we use standard connections 
+// (which utilize fast, unbuffered WebSockets), and fall back if needed.
 let dbInstance;
 try {
   dbInstance = initializeFirestore(app, {
-    localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()}),
-    experimentalForceLongPolling: true
+    localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
   }, firebaseConfig.firestoreDatabaseId);
 } catch (error) {
-  console.warn("Firestore persistent cache initialization failed, trying with long polling but in-memory cache:", error);
+  console.warn("Firestore persistent cache initialization failed, trying with fallback config:", error);
   try {
     dbInstance = initializeFirestore(app, {
       experimentalForceLongPolling: true
