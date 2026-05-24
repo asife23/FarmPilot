@@ -10,6 +10,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import { Toaster } from 'react-hot-toast';
 import Layout from './components/Layout';
 import Login from './views/Login';
+import Home from './views/Home';
 import Dashboard from './views/Dashboard';
 import Batches from './views/Batches';
 import Feed from './views/Feed';
@@ -35,7 +36,8 @@ function AppRoutes() {
         <Route path="/login" element={<Login />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
-          <Route index element={<Dashboard />} />
+          <Route index element={<Home />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="batches" element={<Batches />} />
           <Route path="feed" element={<Feed />} />
           <Route path="medicine" element={<Medicine />} />

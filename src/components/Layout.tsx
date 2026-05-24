@@ -26,7 +26,7 @@ export default function Layout() {
   if (!currentUser) return <Outlet />;
 
   const navItems = [
-    { name: t('menu.dashboard'), path: '/', icon: Home },
+    { name: t('menu.home'), path: '/', icon: Home },
     { name: t('menu.batches'), path: '/batches', icon: Package },
     { name: t('menu.feed'), path: '/feed', icon: ClipboardList },
     { name: t('menu.medicine'), path: '/medicine', icon: ShieldPlus },

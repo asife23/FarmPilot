@@ -16,6 +16,7 @@ const translations: Record<Language, Record<string, string>> = {
   bn: {
     'app.title': 'ডিজিটাল খামার প্রো',
     // Layout Tab Bar
+    'menu.home': 'হোম',
     'menu.dashboard': 'ড্যাশবোর্ড',
     'menu.batches': 'ব্যাচ',
     'menu.feed': 'খাবার',
@@ -348,6 +349,7 @@ const translations: Record<Language, Record<string, string>> = {
   en: {
     'app.title': 'Digital Khamar Pro',
     // Layout Tab Bar
+    'menu.home': 'Home',
     'menu.dashboard': 'Dashboard',
     'menu.batches': 'Batches',
     'menu.feed': 'Feed',
